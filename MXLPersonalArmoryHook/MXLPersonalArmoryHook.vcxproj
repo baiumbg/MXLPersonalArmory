@@ -130,6 +130,7 @@
   <ItemGroup>
     <ClInclude Include="include\D2DLLBases.h" />
     <ClInclude Include="include\D2Ptrs.h" />
+    <ClInclude Include="include\D2Structs.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

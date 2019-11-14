@@ -23,5 +23,8 @@
     <ClInclude Include="include\D2DLLBases.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="include\D2Structs.h">
+      <Filter>include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -48,7 +48,7 @@ namespace MXLPersonalArmory
         {
             InitializeComponent();
 
-            Process targetProcess;
+            Process targetProcess = null;
             foreach (Process p in Process.GetProcessesByName("Game"))
             {
                 if (p.Threads.Count > 0)
@@ -58,7 +58,10 @@ namespace MXLPersonalArmory
                 }
             }
 
-            targetProcess = Process.GetProcessesByName("Game")[1];
+            if (targetProcess == null)
+            {
+                return;
+            }
 
             IntPtr procHandle = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, false, targetProcess.Id);
             IntPtr loadLibraryAddr = GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");

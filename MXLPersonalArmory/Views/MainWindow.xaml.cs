@@ -4,6 +4,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows;
 using System.IO;
+using System.Threading;
+using System.Collections.Generic;
 
 namespace MXLPersonalArmory
 {
@@ -32,6 +34,9 @@ namespace MXLPersonalArmory
         static extern IntPtr CreateRemoteThread(IntPtr hProcess,
             IntPtr lpThreadAttributes, uint dwStackSize, IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);
 
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern IntPtr CreateThread(IntPtr lpThreadAttributes, uint dwStackSize, IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);
+
         // privileges
         const int PROCESS_CREATE_THREAD = 0x0002;
         const int PROCESS_QUERY_INFORMATION = 0x0400;
@@ -44,33 +49,48 @@ namespace MXLPersonalArmory
         const uint MEM_RESERVE = 0x00002000;
         const uint PAGE_READWRITE = 4;
 
+        const int SLEEP_BETWEEN_PROC_CHECK = 1000;
+
+        HashSet<int> OpenProcesses = new HashSet<int>();
+
+        private void BackgroundInjector()
+        {
+            IntPtr loadLibraryAddr = GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
+            string dllName = Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName), "MXLPersonalArmoryHook.dll");
+            while (true)
+            {
+                foreach (Process p in Process.GetProcessesByName("Game"))
+                {
+                    if (p.Threads.Count < 1 || OpenProcesses.Contains(p.Id))
+                    {
+                        continue;
+                    }
+
+                    IntPtr procHandle = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, false, p.Id);
+                    IntPtr allocMemAddress = VirtualAllocEx(procHandle, IntPtr.Zero, (uint)((dllName.Length + 1) * Marshal.SizeOf(typeof(char))), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+                    UIntPtr bytesWritten;
+                    WriteProcessMemory(procHandle, allocMemAddress, Encoding.Default.GetBytes(dllName), (uint)((dllName.Length + 1) * Marshal.SizeOf(typeof(char))), out bytesWritten);
+                    IntPtr RemoteThread = CreateRemoteThread(procHandle, IntPtr.Zero, 0, loadLibraryAddr, allocMemAddress, 0, IntPtr.Zero);
+
+                    if(RemoteThread != null)
+                    {
+                        OpenProcesses.Add(p.Id);
+                        Debug.WriteLine("Successfully attached to " + p.Id);
+                    }
+                    else
+                    {
+                        Debug.WriteLine("Failed to attach to " + p.Id);
+                    }
+                }
+                Thread.Sleep(SLEEP_BETWEEN_PROC_CHECK);
+            }
+        }
+
         public MainWindow()
         {
             InitializeComponent();
-
-            Process targetProcess = null;
-            foreach (Process p in Process.GetProcessesByName("Game"))
-            {
-                if (p.Threads.Count > 0)
-                {
-                    targetProcess = p;
-                    break;
-                }
-            }
-
-            if (targetProcess == null)
-            {
-                return;
-            }
-
-            IntPtr procHandle = OpenProcess(PROCESS_CREATE_THREAD | PROCESS_QUERY_INFORMATION | PROCESS_VM_OPERATION | PROCESS_VM_WRITE | PROCESS_VM_READ, false, targetProcess.Id);
-            IntPtr loadLibraryAddr = GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
-            string dllName = Path.Combine(Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName), "MXLPersonalArmoryHook.dll");
-            IntPtr allocMemAddress = VirtualAllocEx(procHandle, IntPtr.Zero, (uint)((dllName.Length + 1) * Marshal.SizeOf(typeof(char))), MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
-
-            UIntPtr bytesWritten;
-            WriteProcessMemory(procHandle, allocMemAddress, Encoding.Default.GetBytes(dllName), (uint)((dllName.Length + 1) * Marshal.SizeOf(typeof(char))), out bytesWritten);
-            CreateRemoteThread(procHandle, IntPtr.Zero, 0, loadLibraryAddr, allocMemAddress, 0, IntPtr.Zero);
+            Thread BackgroundInjectorThread = new Thread(BackgroundInjector);
+            BackgroundInjectorThread.Start();
         }
     }
 }

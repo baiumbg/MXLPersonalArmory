@@ -6,12 +6,10 @@ using System.Windows;
 using System.IO;
 using System.Threading;
 using System.Collections.Generic;
+using System.IO.Pipes;
 
 namespace MXLPersonalArmory
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         [DllImport("kernel32.dll")]
@@ -49,9 +47,35 @@ namespace MXLPersonalArmory
         const uint MEM_RESERVE = 0x00002000;
         const uint PAGE_READWRITE = 4;
 
-        const int SLEEP_BETWEEN_PROC_CHECK = 1000;
+        private const int SLEEP_BETWEEN_PROC_CHECK = 1000;
 
-        HashSet<int> OpenProcesses = new HashSet<int>();
+        Dictionary<int, NamedPipeServerStream> OpenProcesses = new Dictionary<int, NamedPipeServerStream>();
+
+        public void Log(string message)
+        {
+            Debug.WriteLine(message);
+            this.Dispatcher.Invoke(() => {
+                logBox.Text += "\n " + message;
+            });
+        }
+
+        private string ReadMessage(NamedPipeServerStream pipeServer, int  pId)
+        {
+            StreamReader sr = new StreamReader(pipeServer);
+            string message = sr.ReadLine();
+            Log("Received messaage from " + pId + ": " + message);
+            return message;
+        }
+
+        private void PipeReaderThread(NamedPipeServerStream pipeServer, int pId)
+        {
+            while (pipeServer.IsConnected)
+            {
+                ReadMessage(pipeServer, pId);
+            }
+            OpenProcesses.Remove(pId);
+            Log("Client " + pId + " has disconnected");
+        }
 
         private void BackgroundInjector()
         {
@@ -61,7 +85,7 @@ namespace MXLPersonalArmory
             {
                 foreach (Process p in Process.GetProcessesByName("Game"))
                 {
-                    if (p.Threads.Count < 1 || OpenProcesses.Contains(p.Id))
+                    if (p.Threads.Count < 1 || OpenProcesses.ContainsKey(p.Id))
                     {
                         continue;
                     }
@@ -74,12 +98,18 @@ namespace MXLPersonalArmory
 
                     if(RemoteThread != null)
                     {
-                        OpenProcesses.Add(p.Id);
-                        Debug.WriteLine("Successfully attached to " + p.Id);
+                        Log("Successfully attached to " + p.Id);
+                        NamedPipeServerStream pipeServer = new NamedPipeServerStream("MXLPersonalArmoryHook", PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances);
+                        Log("Waiting for " + p.Id + " pipe connection...");
+                        pipeServer.WaitForConnection();
+                        Log("Client "+ p.Id + " has connected");
+                        Thread pipeReaderThread = new Thread(() => PipeReaderThread(pipeServer, p.Id));
+                        pipeReaderThread.Start();
+                        OpenProcesses[p.Id] = pipeServer;
                     }
                     else
                     {
-                        Debug.WriteLine("Failed to attach to " + p.Id);
+                        Log("Failed to attach to " + p.Id);
                     }
                 }
                 Thread.Sleep(SLEEP_BETWEEN_PROC_CHECK);
@@ -89,8 +119,8 @@ namespace MXLPersonalArmory
         public MainWindow()
         {
             InitializeComponent();
-            Thread BackgroundInjectorThread = new Thread(BackgroundInjector);
-            BackgroundInjectorThread.Start();
+            Thread backgroundInjectorThread = new Thread(BackgroundInjector);
+            backgroundInjectorThread.Start();
         }
     }
 }

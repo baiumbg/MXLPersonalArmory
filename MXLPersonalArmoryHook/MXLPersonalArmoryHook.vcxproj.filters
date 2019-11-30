@@ -15,6 +15,9 @@
     <ClCompile Include="src\D2DLLBases.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\MXLPersonalArmoryHook\PipeClient.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\D2Ptrs.h">
@@ -24,6 +27,9 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\D2Structs.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\PipeClient.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

@@ -16,7 +16,7 @@
             <ColumnDefinition Width="68*"/>
             <ColumnDefinition Width="11*"/>
         </Grid.ColumnDefinitions>
-        <TextBox x:Name="logBox" HorizontalAlignment="Left" Height="162" Margin="23,239,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="737" Grid.Row="1" VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="2"/>
+        <TextBox x:Name="logBox" IsReadOnly="True" HorizontalAlignment="Left" Height="162" Margin="23,239,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="737" Grid.Row="1" VerticalScrollBarVisibility="Auto" Grid.ColumnSpan="2" Text="{Binding LogBox}"/>
         <TextBlock HorizontalAlignment="Left" Margin="23,205,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Log:" VerticalAlignment="Top" RenderTransformOrigin="-1.189,3.556" Height="34" Width="54" FontSize="20" FontFamily="Yu Gothic UI Semibold"/>
 
     </Grid>

@@ -8,16 +8,21 @@ DWORD WINAPI D2Thread(LPVOID lpParam)
 {
     HMODULE mxlpaModule = (HMODULE)lpParam;
 
-    while (!D2CLIENT_GetPlayerUnit())
+    if (!!D2CLIENT_GetPlayerUnit())
     {
-        Sleep(200);
+        D2CLIENT_Print(L"You son of a bitch. I'm in.", 0);
     }
 
-    std::wstringstream s;
-    s << D2CLIENT_GetPlayerUnit()->pPlayerData->szName << L" is in the house.";
+    g_PipeClient.send(L"You son of a bitch. I'm in.\n");
 
-    g_PipeClient.send(s.str());
-    D2CLIENT_Print(s.str().c_str(), 0);
+    std::wstring msg(1024, '\0');
+    while (g_PipeClient.read(msg))
+    {
+        if (!!D2CLIENT_GetPlayerUnit())
+        {
+            D2CLIENT_Print(msg.c_str(), 0);
+        }
+    }
 
     FreeLibraryAndExitThread(mxlpaModule, 0);
 }

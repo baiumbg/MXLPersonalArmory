@@ -31,7 +31,7 @@ namespace MXLPersonalArmory
         [DllImport("kernel32.dll", SetLastError = true)]
         static extern IntPtr CreateThread(IntPtr lpThreadAttributes, uint dwStackSize, IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);
 
-        HashSet<int> OpenProcesses = new HashSet<int>();
+        public Dictionary<int, PipeClient> OpenProcesses = new Dictionary<int, PipeClient>();
 
         private void PipeReaderThread(PipeClient pipeClient)
         {
@@ -66,7 +66,7 @@ namespace MXLPersonalArmory
             {
                 foreach (Process p in Process.GetProcessesByName("Game"))
                 {
-                    if (p.Threads.Count < 1 || OpenProcesses.Contains(p.Id))
+                    if (p.Threads.Count < 1 || OpenProcesses.ContainsKey(p.Id))
                     {
                         continue;
                     }
@@ -86,7 +86,7 @@ namespace MXLPersonalArmory
                         Thread pipeReaderThread = new Thread(() => PipeReaderThread(pipeClient));
                         pipeReaderThread.IsBackground = true;
                         pipeReaderThread.Start();
-                        OpenProcesses.Add(p.Id);
+                        OpenProcesses[p.Id] = pipeClient;
                         Logger.Log("Successfully attached to " + p.Id);
                     }
                     else

@@ -127,12 +127,14 @@
     <ClCompile Include="..\src\MXLPersonalArmoryHook\PipeClient.cpp" />
     <ClCompile Include="src\D2DLLBases.cpp" />
     <ClCompile Include="src\DLLMain.cpp" />
+    <ClCompile Include="src\MPQStats.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\D2DLLBases.h" />
     <ClInclude Include="include\D2Ptrs.h" />
     <ClInclude Include="include\D2Structs.h" />
     <ClInclude Include="include\PipeClient.h" />
+    <ClInclude Include="src\MPQStats.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

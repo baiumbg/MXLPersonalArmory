@@ -16,7 +16,20 @@ namespace MXLPersonalArmory.ViewModels
                 OnPropertyChanged("LogBox");
             }
         }
+        public string CommandBox
+        {
+            get
+            {
+                return cmdBox;
+            }
+            set
+            {
+                cmdBox = value;
+                OnPropertyChanged("CommandBox");
+            }
+        }
         private string logBox;
+        private string cmdBox;
 
         private void OnPropertyChanged(string name)
         {

@@ -124,7 +124,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\MXLPersonalArmoryHook\PipeClient.cpp" />
+    <ClCompile Include="src\PipeClient.cpp" />
     <ClCompile Include="src\D2DLLBases.cpp" />
     <ClCompile Include="src\DLLMain.cpp" />
   </ItemGroup>

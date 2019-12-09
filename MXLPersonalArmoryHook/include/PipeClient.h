@@ -13,7 +13,7 @@ public:
 
     void connect();
     void send(const std::wstring& message);
-    bool read(std::wstring& message);
+    bool read(std::wstring& msgOut);
     void disconnect();
 private:
     std::wstring m_PipeAddress;

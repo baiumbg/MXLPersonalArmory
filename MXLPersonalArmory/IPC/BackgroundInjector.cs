@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -31,7 +31,7 @@ namespace MXLPersonalArmory
         [DllImport("kernel32.dll", SetLastError = true)]
         static extern IntPtr CreateThread(IntPtr lpThreadAttributes, uint dwStackSize, IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);
 
-        HashSet<int> OpenProcesses = new HashSet<int>();
+        public Dictionary<int, PipeClient> OpenProcesses = new Dictionary<int, PipeClient>();
 
         private void PipeReaderThread(PipeClient pipeClient)
         {
@@ -66,7 +66,7 @@ namespace MXLPersonalArmory
             {
                 foreach (Process p in Process.GetProcessesByName("Game"))
                 {
-                    if (p.Threads.Count < 1 || OpenProcesses.Contains(p.Id))
+                    if (p.Threads.Count < 1 || OpenProcesses.ContainsKey(p.Id))
                     {
                         continue;
                     }
@@ -78,7 +78,7 @@ namespace MXLPersonalArmory
                     PipeClient pipeClient = new PipeClient(p.Id);
                     IntPtr RemoteThread = CreateRemoteThread(procHandle, IntPtr.Zero, 0, loadLibraryAddr, allocMemAddress, 0, IntPtr.Zero);
 
-                    if (RemoteThread != null)
+                    if (RemoteThread != IntPtr.Zero)
                     {
                         Logger.Log("Waiting for " + p.Id + " pipe connection...");
                         pipeClient.Pipe.WaitForConnection();
@@ -86,15 +86,13 @@ namespace MXLPersonalArmory
                         Thread pipeReaderThread = new Thread(() => PipeReaderThread(pipeClient));
                         pipeReaderThread.IsBackground = true;
                         pipeReaderThread.Start();
-                        OpenProcesses.Add(p.Id);
+                        OpenProcesses[p.Id] = pipeClient;
                         Logger.Log("Successfully attached to " + p.Id);
                     }
                     else
                     {
                         Logger.Log("Failed to attach to " + p.Id);
-                        pipeClient.Pipe.Disconnect();
                     }
-                    pipeClient.SendMessage("Test");
                 }
                 Thread.Sleep(SLEEP_BETWEEN_PROC_CHECK);
             }

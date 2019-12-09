@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 
 using MXLPersonalArmory.ViewModels;
 
@@ -12,8 +12,11 @@ namespace MXLPersonalArmory
         {
             InitializeComponent();
             DataContext = ViewModel;
-            BackgroundInjector backgroundInjector = new BackgroundInjector();
-            backgroundInjector.Start();
+        }
+
+        private void SendCommand(object sender, RoutedEventArgs e)
+        {
+            ViewModel.SendCommand();
         }
     }
 }

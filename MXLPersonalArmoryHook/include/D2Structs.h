@@ -721,18 +721,6 @@ struct InventoryLayout {
     BYTE SlotPixelHeight;
 };
 
-struct MpqTable;
-
-struct sgptDataTable {
-    MpqTable*   pPlayerClass;
-    DWORD       dwPlayerClassRecords;
-    MpqTable*   pBodyLocs;
-    DWORD       dwBodyLocsRecords;
-    MpqTable*   pStorePage;
-    DWORD       dwStorePageRecords;
-    MpqTable*   pElemTypes;
-};
-
 struct MessageHandlerList
 {
     DWORD message;

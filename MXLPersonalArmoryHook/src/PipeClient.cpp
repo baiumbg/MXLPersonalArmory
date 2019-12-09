@@ -19,10 +19,15 @@ void PipeClient::send(const std::wstring& message)
     WriteFile(m_Pipe, message.c_str(), message.size() * sizeof(wchar_t), &len, NULL);
 }
 
-bool PipeClient::read(std::wstring& message)
+bool PipeClient::read(std::wstring& msgOut)
 {
     DWORD len;
-    return ReadFile(m_Pipe, &message[0], message.size(), &len, NULL);
+
+    msgOut.resize(1024);
+    bool result = ReadFile(m_Pipe, &msgOut[0], 1024, &len, NULL);
+    msgOut.resize(len / 2);
+
+    return result;
 }
 
 void PipeClient::disconnect()

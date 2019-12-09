@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 
 namespace MXLPersonalArmory
 {
@@ -7,7 +7,6 @@ namespace MXLPersonalArmory
         public static void Log(string text)
         {
             MainWindow.ViewModel.LogBox += text + "\n";
-            MainWindow.ViewModel.LogBox.ScrollToEnd();
             Debug.WriteLine(text);
         }
     }

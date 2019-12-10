@@ -6,6 +6,9 @@ using System.IO;
 using System.Threading;
 using System.Collections.Generic;
 
+using MXLPersonalArmory.IPC.Messaging;
+using MXLPersonalArmory.Globals;
+
 namespace MXLPersonalArmory
 {
     class BackgroundInjector
@@ -37,7 +40,8 @@ namespace MXLPersonalArmory
         {
             while (pipeClient.Pipe.IsConnected)
             {
-                pipeClient.ReadMessage();
+                Message message = pipeClient.ReadMessage();
+                pipeClient.HandleMessage(message);
             }
             Logger.Log("Client " + pipeClient.PID + " has disconnected");
             OpenProcesses.Remove(pipeClient.PID);

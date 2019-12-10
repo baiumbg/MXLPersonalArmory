@@ -1,13 +1,15 @@
 #include <windows.h>
 #include <D2Ptrs.h>
+#include <D2Hooks.h>
 #include <PipeClient.h>
-#include "MPQStats.h"
 
 #include <sstream>
 
 DWORD WINAPI D2Thread(LPVOID lpParam)
 {
     HMODULE mxlpaModule = (HMODULE)lpParam;
+
+    InitHooks();
 
     if (!!D2CLIENT_GetPlayerUnit())
     {
@@ -24,6 +26,8 @@ DWORD WINAPI D2Thread(LPVOID lpParam)
             D2CLIENT_Print(msg.c_str(), 0);
         }
     }
+
+    DeinitHooks();
 
     FreeLibraryAndExitThread(mxlpaModule, 0);
 }

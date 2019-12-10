@@ -18,6 +18,12 @@
     <ClCompile Include="src\PipeClient.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\D2Hooks.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\D2Helpers.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\D2Ptrs.h">
@@ -30,6 +36,15 @@
       <Filter>include</Filter>
     </ClInclude>
     <ClInclude Include="include\PipeClient.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D2Hooks.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D2Constants.h">
+      <Filter>include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\D2Helpers.h">
       <Filter>include</Filter>
     </ClInclude>
   </ItemGroup>

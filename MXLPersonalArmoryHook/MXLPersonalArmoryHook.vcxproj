@@ -103,6 +103,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>NDEBUG;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -124,12 +125,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\D2Helpers.cpp" />
+    <ClCompile Include="src\D2Hooks.cpp" />
     <ClCompile Include="src\PipeClient.cpp" />
     <ClCompile Include="src\D2DLLBases.cpp" />
     <ClCompile Include="src\DLLMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\D2Constants.h" />
     <ClInclude Include="include\D2DLLBases.h" />
+    <ClInclude Include="include\D2Helpers.h" />
+    <ClInclude Include="include\D2Hooks.h" />
     <ClInclude Include="include\D2Ptrs.h" />
     <ClInclude Include="include\D2Structs.h" />
     <ClInclude Include="include\PipeClient.h" />

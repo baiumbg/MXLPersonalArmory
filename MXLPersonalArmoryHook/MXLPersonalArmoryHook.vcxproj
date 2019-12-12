@@ -83,7 +83,8 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)thirdparty</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NOMINMAX;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -102,8 +103,8 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)include</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>NDEBUG;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir)include;$(ProjectDir)thirdparty</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NOMINMAX;NDEBUG;_WINDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -127,6 +128,8 @@
   <ItemGroup>
     <ClCompile Include="src\D2Helpers.cpp" />
     <ClCompile Include="src\D2Hooks.cpp" />
+    <ClCompile Include="src\Messages\InventoryMessage.cpp" />
+    <ClCompile Include="src\MPQStats.cpp" />
     <ClCompile Include="src\PipeClient.cpp" />
     <ClCompile Include="src\D2DLLBases.cpp" />
     <ClCompile Include="src\DLLMain.cpp" />
@@ -138,6 +141,9 @@
     <ClInclude Include="include\D2Hooks.h" />
     <ClInclude Include="include\D2Ptrs.h" />
     <ClInclude Include="include\D2Structs.h" />
+    <ClInclude Include="include\Messages\BaseMessage.h" />
+    <ClInclude Include="include\Messages\InventoryMessage.h" />
+    <ClInclude Include="include\MPQStats.h" />
     <ClInclude Include="include\PipeClient.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

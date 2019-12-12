@@ -11,13 +11,13 @@ namespace MXLPersonalArmory
 
         public PipeClient(int _pId)
         {
-            Pipe = new NamedPipeServerStream("MXLPersonalArmoryHook", PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Message, PipeOptions.Asynchronous);
+            Pipe = new NamedPipeServerStream("MXLPersonalArmoryHook", PipeDirection.InOut, NamedPipeServerStream.MaxAllowedServerInstances, PipeTransmissionMode.Message);
             PID = _pId;
         }
 
         public string ReadMessage()
         {
-            byte[] c = new byte[1024];
+            byte[] c = new byte[80960];
             int len = Pipe.Read(c, 0, c.Length);
             string message = Encoding.Unicode.GetString(c, 0, len);
             Logger.Log("Received message from " + PID + ": " + message);

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -35,6 +35,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -72,8 +75,15 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="IPC\BackgroundInjector.cs" />
-    <Compile Include="Utils\Logger.cs" />
+    <Compile Include="IPC\Messaging\Message.cs" />
+    <Compile Include="IPC\Messaging\MessageBody.cs" />
+    <Compile Include="IPC\Messaging\Messages\InventoryMessage.cs" />
+    <Compile Include="IPC\Messaging\Messages\Models\Item.cs" />
+    <Compile Include="IPC\Messaging\Messages\Models\Stat.cs" />
+    <Compile Include="IPC\Messaging\MessageType.cs" />
+    <Compile Include="Globals\Logger.cs" />
     <Compile Include="IPC\PipeClient.cs" />
+    <Compile Include="Globals\Utils.cs" />
     <Compile Include="ViewModels\MainWindowVM.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -98,6 +108,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

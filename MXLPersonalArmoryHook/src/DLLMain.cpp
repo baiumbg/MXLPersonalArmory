@@ -16,8 +16,6 @@ DWORD WINAPI D2Thread(LPVOID lpParam)
         D2CLIENT_Print(L"You son of a bitch. I'm in.", 0);
     }
 
-    g_PipeClient.send(L"You son of a bitch. I'm in.\r\n");
-
     std::wstring msg;
     while (g_PipeClient.read(msg) && msg != L"exit")
     {

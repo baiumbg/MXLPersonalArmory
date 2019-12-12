@@ -1,6 +1,6 @@
 using System.Diagnostics;
 
-namespace MXLPersonalArmory
+namespace MXLPersonalArmory.Globals
 {
     class Logger
     {

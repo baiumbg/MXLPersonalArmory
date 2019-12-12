@@ -1,7 +1,9 @@
 #include <D2Ptrs.h>
 #include <D2Hooks.h>
 #include <D2Constants.h>
+#include <D2Helpers.h>
 #include <PipeClient.h>
+#include <Messages/InventoryMessage.h>
 
 #include <sstream>
 
@@ -33,7 +35,15 @@ LRESULT CALLBACK KeyPress(int code, WPARAM wParam, LPARAM lParam)
     {
         if (ingame && !chatBoxOpen && !escMenuOpen && isUp && !isRepeat && code == HC_ACTION)
         {
-            D2CLIENT_Print(L"You pressed G!", 0);
+            InventoryMessage msg;
+
+            size_t nameLength = strlen(D2CLIENT_GetPlayerUnit()->pPlayerData->szName);
+            msg.Character.resize(nameLength);
+            mbstowcs(&msg.Character[0], D2CLIENT_GetPlayerUnit()->pPlayerData->szName, nameLength);
+
+            MXLPA::CollectItems(msg.Items);
+
+            g_PipeClient.send(msg.toJSONString());
         }
     }
 

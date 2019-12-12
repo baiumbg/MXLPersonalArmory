@@ -21,10 +21,18 @@ void PipeClient::send(const std::wstring& message)
 
 bool PipeClient::read(std::wstring& msgOut)
 {
+    DWORD bytesAvailable;
+    bool result = PeekNamedPipe(m_Pipe, NULL, NULL, NULL, &bytesAvailable, NULL);
+
+    if (bytesAvailable == 0)
+    {
+        return result;
+    }
+
     DWORD len;
 
     msgOut.resize(1024);
-    bool result = ReadFile(m_Pipe, &msgOut[0], 1024, &len, NULL);
+    result = ReadFile(m_Pipe, &msgOut[0], 1024, &len, NULL);
     msgOut.resize(len / 2);
 
     return result;

@@ -5,7 +5,8 @@ using Newtonsoft.Json;
 
 using MXLPersonalArmory.IPC.Messaging;
 using MXLPersonalArmory.IPC.Messaging.Messages;
-using MXLPersonalArmory.Globals;
+using Logger = MXLPersonalArmory.Globals.Logger;
+using MXLPersonalArmory.Database;
 
 namespace MXLPersonalArmory
 {
@@ -26,6 +27,7 @@ namespace MXLPersonalArmory
             {
                 case MessageType.Inventory:
                     Logger.Log(message.ToString());
+                    InventoryRepository.UpdateInventory((Inventory)message.body);
                     break;
             }
         }
@@ -40,7 +42,7 @@ namespace MXLPersonalArmory
             {
                 case MessageType.Inventory:
                     {
-                        messageBody = o["body"].ToObject<InventoryMessage>();
+                        messageBody = o["body"].ToObject<Inventory>();
                         break;
                     }
             }

@@ -15,9 +15,10 @@ namespace MXLPersonalArmory.Database
         public static void UpdateInventory(Inventory inventory)
         {
             LiteCollection<Inventory> collection = DB.GetCollection<Inventory>("inventory");
-            if (GetInventory(inventory.characterName) != null)
+            Inventory existingInventory = GetInventory(inventory.characterName);
+            if (existingInventory != null)
             {
-                collection.Delete(inv => inv.characterName == inventory.characterName);
+                collection.Delete(existingInventory.id);
             }
             collection.Insert(inventory);
         }

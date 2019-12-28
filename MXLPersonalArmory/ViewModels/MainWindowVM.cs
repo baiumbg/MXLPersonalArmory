@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 
 namespace MXLPersonalArmory.ViewModels
 {
@@ -35,6 +36,7 @@ namespace MXLPersonalArmory.ViewModels
 
         public MainWindowVM()
         {
+            Directory.CreateDirectory(Database.Database.DatabasePath);
             backgroundInjector = new BackgroundInjector();
             backgroundInjector.Start();
         }
